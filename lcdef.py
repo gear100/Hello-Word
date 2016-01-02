@@ -1,17 +1,21 @@
+import sys
+import os
+
+
 
 class UlcLcdef2List:
-	def __init__(self,file):
-		self.file = file
-	
+    def __init__(self,file):
+        self.file = file
+    
                 #list.append([(n[i:j]) for i,j in lineformat])
                                 
-	def ulc(self):
-		inp = open(self.file, "r")
-		lineformat , grp, sid = [(0,8),(8,16),(16,24),(24,32),(32,40),(40,48),(48,56),(56,64),(64,72),(72,81)] ,"gru" ,"sid"
+    def ulc(self):
+        inp = open(self.file, "r")
+        lineformat , grp, sid = [(0,8),(8,16),(16,24),(24,32),(32,40),(40,48),(48,56),(56,64),(64,72),(72,81)] ,"gru" ,"sid"
 
-		line = inp.readline()
-		dic_ulc = {}
-		while 1:
+        line = inp.readline()
+        dic_ulc = {}
+        while 1:
 
                         if line.startswith("$LCASE"):
                                 n = line.rstrip("\n").ljust(80)# + "\n"                             # add \n on position 81 for each line
@@ -30,24 +34,24 @@ class UlcLcdef2List:
                                         line = inp.readline()
                                       
                         break
-		
-                inp.close()
-			
+        
+        inp.close()
+            
 
-		return dic_ulc
+        return dic_ulc
 
 class ClcLcdef2List():
 
         ulc={1000:"ulc n/a"}
-
         csv = ""
         DICcsv = ""
 
 
-	def __init__(self,file,find=""):
+        def __init__(self,file,find=""):
                 self.file = file
                 self.find = find
-                
+                ClcLcdef2List.ulc= UlcLcdef2List(file).ulc() # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        
                 #list.append([(n[i:j]) for i,j in lineformat])
 
                 if self.find == "" or self.find == "PRINT only" :
@@ -68,13 +72,13 @@ class ClcLcdef2List():
 
                         
         def clc(self):
-		inp = open(self.file, "r")
-                lineformat , grp, sid = [(0,8),(8,16),(16,24),(24,32),(32,40),(40,48),(48,56),(56,64),(64,72),(72,81)] ,"gru" ,"sid"
-                lineformatCOM , grp, sid = [(8,16),(16,24),(24,32)] ,"gru" ,"sid"
-		line = inp.readline()
-		dic_ulc = {}
-		cou = 500
-		while 1:
+            inp = open(self.file, "r")
+            lineformat , grp, sid = [(0,8),(8,16),(16,24),(24,32),(32,40),(40,48),(48,56),(56,64),(64,72),(72,81)] ,"gru" ,"sid"
+            lineformatCOM , grp, sid = [(8,16),(16,24),(24,32)] ,"gru" ,"sid"
+            line = inp.readline()
+            dic_ulc = {}
+            cou = 500
+            while 1:
                         
                         if line.startswith("$LCOMB"):
                                 cou += 1 
@@ -125,17 +129,53 @@ class ClcLcdef2List():
                                         line = inp.readline()
                                         if not line:
                                                      break
-		        
+                
                                         
                         else:
                                 line = inp.readline()
                                 if not line:
                                                 break
-		
-                inp.close()
-			
+        
+            inp.close()
+            
 
-		return dic_ulc
+            return dic_ulc
 
 
-	
+    
+if __name__ == '__main__':
+
+        print  "\n _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/ \n"
+
+        path =  os.path.dirname(os.path.abspath(sys.argv[0])) + "\\"
+
+        #print "work dictionary :" ,path
+
+        file_1 = "LCDDEC14.SDB"
+        file_p = path + file_1
+        
+        if os.path.isfile(file_p):
+                        sys.stdout.write("file exist: \n -ok-->   " + file_p + "\n")
+        else:
+                sys.stderr.write("[ERO] no file find: \n -ero->   " + file_p+ "\n")
+
+
+        print  "\n _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/ \n"
+
+        ulc_1 = UlcLcdef2List(file_p).ulc()
+
+
+        print type(ulc_1)
+
+        for inp in ulc_1:
+                print inp, ulc_1[inp]
+
+
+        print  "\n _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/ \n"
+
+        
+        clc_1 = ClcLcdef2List(file_p).clc()
+
+        print type(clc_1)
+        
+        
